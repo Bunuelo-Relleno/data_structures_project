@@ -1,0 +1,86 @@
+Instrucciones
+Entrega 0: Interfaz de Usuario
+
+Objetivo: La entrega inicial corresponderá únicamente a la interfaz de usuario necesaria para interactuar con el sistema. De esta forma, se verificará el indicador de línea del comando y que el sistema realice la validación de los comandos permitidos y sus parámetros.
+
+Descripción: La interfaz de la aplicación a construir debe ser una consola interactiva donde los comandos correspondientes a los componentes serán tecleados por el usuario, de la misma forma que se trabaja en la terminal o consola del sistema operativo. El indicador de línea de comando debe ser el carácter $.
+
+Debe incluirse un comando ayuda para indicar una lista de los comandos disponibles en el momento. Además, cada comando debe tener una ayuda de uso que indique la forma correcta de ejecutarlo (por ejemplo, el comando ayuda comando debe existir).
+
+Cada comando debe presentar en pantalla los mensajes de resultado (éxito o error) especificados, además de otros mensajes necesarios que permitan al usuario saber cuándo terminó el comando su procesamiento y el resultado de ese procesamiento. Los comandos de los diferentes componentes deben ensamblarse en un único sistema (es decir, deben funcionar todos dentro de un mismo programa, no como programas independientes por componentes).
+
+Requisitos de Entrega: La entrega debe realizarse a través de un video que no supere los 10 minutos. En este video, se debe mostrar:
+
+Compilación del Programa:
+
+Demostración de la compilación del programa a través de la terminal de comandos.
+Ejecución del Programa:
+
+Demostración de la ejecución del programa.
+Mostrar todas las posibles interacciones que puede tener un usuario con el sistema.
+Utilizar los comandos de la interfaz interactiva.
+Mostrar la validación de los comandos permitidos y sus parámetros.
+Demostrar el uso del comando ayuda para listar los comandos disponibles y proporcionar la ayuda específica de cada comando.
+Formato de Entrega:
+
+El video debe ser entregado en un enlace a Youtube (configurado como no listado) o en formato .mp4.
+El video no debe exceder los 10 minutos de duración.
+Criterios de Evaluación:
+
+Compilación (25%):
+Correcta demostración del proceso de compilación del programa.
+Interfaz de Usuario (25%):
+Implementación del indicador de línea de comando $.
+Funcionamiento correcto del comando ayuda.
+Validación de los comandos permitidos y sus parámetros.
+Interacción (25%):
+Claridad en la demostración de las interacciones posibles con el sistema.
+Mensajes de resultado (éxito o error) claros y específicos.
+Video (25%):
+Cumplimiento del límite de tiempo (máximo 10 minutos).
+Claridad y calidad del video.
+Notas Adicionales:
+
+Asegúrate de que el video sea de buena calidad y que el audio sea claro para facilitar la evaluación.
+Prepara una lista de comandos y ejemplos de uso para asegurarte de que todas las interacciones posibles sean demostradas de manera efectiva en el video.
+¡Buena suerte!
+
+COMANDOS – PROYECTO (Estructuras de Datos)
+-	ayuda
+	Debe mostrar una lista de todos los comandos disponibles.
+-	cargar_imagen nombre_imagen.pgm
+	Proceso satisfactorio: La imagen nombre_imagen.pgm ha sido cargada.
+	Proceso fallido: La imagen nombre_imagen.pgm no ha podido ser cargada.
+	ayuda cargar_imagen: para usar el comando escribir: cargar_imagen nombre_imagen.pgm, siendo nombre_imagen_pgm el nombre del archivo de la imagen que desea cargar. Se encarga de cargar una imagen.
+-	cargar_volumen nombre_base n_im
+	Proceso satisfactorio: El volumen nombre_base ha sido cargado.
+	Proceso fallido: El volumen nombre_base no ha podido ser cargado.
+	Ayuda cargar_volumen: para usar comando escribir cargar_volumen nombre_base n_im, siendo nombre_base la serie ordenada de imágenes y n_im el tamaño de esta. Se encarga de cargar el volumen de una serie de imágenes.
+-	info_imagen
+	Proceso satisfactorio: Imagen cargada en memoria: nombre_imagen.pgm , ancho: W , alto: H
+	Proceso fallido: No hay una imagen cargada en memoria
+	Ayuda info_imagen: para usar comando escribir: info_imagen, mostrara la información de la imagen cargada actualmente.
+-	info_volumen
+	Proceso satisfactorio: Volumen cargado en memoria: nombre_base , tamaño: n_im , ancho: W, alto: H.
+	Proceso fallido: No hay un volumen cargado en memoria.
+	Ayuda info_volumen: para usar el comando escribir: info_volumen, mostrara la información de la serie de imágenes actual.
+-	proyeccion2D direccion criterio nombre_archivo.pgm
+	Proceso satisfactorio: La proyección 2D del volumen en memoria ha sido generada y almacenada en el archivo nombre_archivo.pgm.
+	Proceso fallido: El volumen aún no ha sido cargado en memoria. La proyección 2D del volumen no ha podido ser generada.
+	Ayuda proyeccion2D: para usar el comando escribir: proyeccion2D direccion criterio nombre_archivo.pgm, siendo direccion x, y o z; según se requiera, criterio mínimo, máximo, promedio o mediana; según se requiera y nombre_archivo.pgm, el nombre del archivo donde se guardará la imagen generada.
+-	codificar_imagen nombre_archivo.huf
+	Proceso satisfactorio: La imagen en memoria ha sido codificada exitosamente y almacenada en el archivo nombre_archivo.huf.
+	Proceso fallido: No hay una imagen cargada en memoria.
+	Ayuda codificiar_imagen: para usar el comando escribir: codificar_imagen nombre_archivo.huf, siendo nombre_archivo.huf el nombre del archivo donde se guardará la imagen cargada luego de codificarla.
+-	decodificar_archivo nombre_archivo.huf nombre_imagen.pgm
+	Proceso satisfactorio: El archivo nombre_archivo.huf ha sido decodificado exitosamente, y la imagen correspondiente se ha almacenado en el archivo nombre_imagen.pgm.
+	Proceso fallido: El archivo nombre_archivo.huf no ha podido ser decodificado.
+	Ayuda decodificar_archivo: para usar el comando escribir: decodificar_archivo nombre_archivo.huf nombre_imagen.pgm, siendo nombre_archivo.huf el nombre del archivo donde se encuentra la imagen codificada, y el nombre_imagen.pgm el nombre del archivo donde se guardará la imagen una vez sea decodificada.
+-	segmentar salida_imagen.pgm sx1 sy1 sl1 sx2 syx2 sl2 …
+	Proceso satisfactorio: La imagen en memoria fue segmentada correctamente y almacenada en el archivo salida_imagen.pgm.
+	Proceso fallido: No hay una imagen cargada en memoria. La imagen en memoria no pudo ser segmentada.
+	Ayuda segmentar: para usar el comando escribir segmentar salida_imagen.pgm sx1 sy1 sl1 sx2 syx2 sl2 …, siendo salida_imagen.pgm el nombre del archivo donde se guardará la imagen segmentada, y las diferentes ‘s’, las semillas que representan las segmentaciones.
+Se puede crear un TAD, en el cual sus funciones o métodos, sean todos y cada uno de los comandos, los cuales se llamarán como su respectivo comando, pero sus parámetros serán la información que le sigue a cada comando.
+En caso de que la interfaz se pueda hacer directamente desde la terminal normal, es decir, sin una ventana aparte, entonces en el main, se crea un menú con switch y un bucle “eterno” para mostrar constantemente el símbolo ‘$’, que indica la línea de comando, los nombres de los cases son los nombres de los comandos, cada vez que se dé uno llama a la función del TAD.
+En caso de que sea necesaria la interfaz gráfica en otra ventana que simule una terminal, no se que hacer.
+Para separar al nombre de los parámetros tocaría recibir la información de la línea de comando como un string, y separar la cadena con strtok o cosas por el estilo, siendo el limitante el espacio ‘ ’.
