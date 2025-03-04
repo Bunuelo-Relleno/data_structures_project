@@ -6,6 +6,22 @@
 // Constructor por defecto
 Imagen::Imagen() : nombre(""), ancho(0), alto(0), intensidadMaxima(0) {}
 
+// Getters y Setters
+std::string Imagen::getNombre() const { return nombre; }
+void Imagen::setNombre(const std::string& nuevoNombre) { nombre = nuevoNombre; }
+
+int Imagen::getAncho() const { return ancho; }
+void Imagen::setAncho(int nuevoAncho) { ancho = nuevoAncho; }s
+
+int Imagen::getAlto() const { return alto; }
+void Imagen::setAlto(int nuevoAlto) { alto = nuevoAlto; }
+
+int Imagen::getIntensidadMaxima() const { return intensidadMaxima; }
+void Imagen::setIntensidadMaxima(int nuevaIntensidadMaxima) { intensidadMaxima = nuevaIntensidadMaxima; }
+
+std::vector<std::vector<int>> Imagen::getPixeles() const { return pixeles; }
+void Imagen::setPixeles(const std::vector<std::vector<int>>& nuevaMatriz) { pixeles = nuevaMatriz; }
+
 // Método para cargar una imagen desde un archivo PGM (P2)
 bool Imagen::cargarDesdeArchivo(const std::string& nombreArchivo) {
     std::ifstream archivo(nombreArchivo);
@@ -38,8 +54,8 @@ bool Imagen::cargarDesdeArchivo(const std::string& nombreArchivo) {
 
     // Leer la matriz de píxeles
     pixeles.assign(alto, std::vector<int>(ancho));
-    for (int i = 0; i < alto; ++i) {
-        for (int j = 0; j < ancho; ++j) {
+    for (int i = 0; i < alto; ++i) { 
+        for (int j = 0; j < ancho; ++j) {   
             if (!(archivo >> pixeles[i][j]) || pixeles[i][j] < 0 || pixeles[i][j] > intensidadMaxima) {
                 std::cerr << "Error: Valores de píxeles fuera de rango" << std::endl;
                 return false;
@@ -79,7 +95,7 @@ bool Imagen::guardarEnArchivo(const std::string& nombreArchivo) const {
         }
         archivo << "\n";
     }
-
+    archivo.close();
     std::cout << "La imagen ha sido guardada correctamente en " << nombreArchivo << std::endl;
     return true;
 }
