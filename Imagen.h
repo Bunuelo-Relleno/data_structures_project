@@ -5,32 +5,16 @@
 #include <vector>
 
 class Imagen {
-private:
+public:
+    // Constructor
+    Imagen();
+
+    // Atributos públicos
     std::string nombre;
     int ancho;
     int alto;
     int intensidadMaxima;
     std::vector<std::vector<int>> pixeles; // Matriz de píxeles en escala de grises
-
-public:
-    // Constructor
-    Imagen();
-
-    // Getters y Setters
-    std::string nombre() const;
-    void nombre(const std::string& nuevoNombre);
-
-    int ancho() const;
-    void ancho(int nuevoAncho);
-
-    int alto() const;
-    void alto(int nuevoAlto);
-
-    int intensidadMaxima() const;
-    void intensidadMaxima(int nuevaIntensidadMaxima);
-
-    std::vector<std::vector<int>> pixeles() const;
-    void pixeles(const std::vector<std::vector<int>>& nuevaMatriz);
 
     // Métodos funcionales
     bool cargarDesdeArchivo(const std::string& nombreArchivo);

@@ -6,22 +6,6 @@
 // Constructor por defecto
 Imagen::Imagen() : nombre(""), ancho(0), alto(0), intensidadMaxima(0) {}
 
-// Getters y Setters
-std::string Imagen::nombre() const { return nombre; }
-void Imagen::nombre(const std::string& nuevoNombre) { nombre = nuevoNombre; }
-
-int Imagen::ancho() const { return ancho; }
-void Imagen::ancho(int nuevoAncho) { ancho = nuevoAncho; }
-
-int Imagen::alto() const { return alto; }
-void Imagen::alto(int nuevoAlto) { alto = nuevoAlto; }
-
-int Imagen::intensidadMaxima() const { return intensidadMaxima; }
-void Imagen::intensidadMaxima(int nuevaIntensidadMaxima) { intensidadMaxima = nuevaIntensidadMaxima; }
-
-std::vector<std::vector<int>> Imagen::pixeles() const { return pixeles; }
-void Imagen::pixeles(const std::vector<std::vector<int>>& nuevaMatriz) { pixeles = nuevaMatriz; }
-
 // Método para cargar una imagen desde un archivo PGM (P2)
 bool Imagen::cargarDesdeArchivo(const std::string& nombreArchivo) {
     std::ifstream archivo(nombreArchivo);
