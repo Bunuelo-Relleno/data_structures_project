@@ -29,7 +29,8 @@ public:
     int getIntensidadMaxima() const;
     void setIntensidadMaxima(int nuevaIntensidadMaxima);
 
-    std::vector<std::vector<int>> getPixeles() const;
+    std::vector<std::vector<int>>& getPixeles();  // Ahora retorna una referencia
+    const std::vector<std::vector<int>>& getPixeles() const;  // Versión const que retorna una referencia const
     void setPixeles(const std::vector<std::vector<int>>& nuevaMatriz);
 
     // Métodos funcionales

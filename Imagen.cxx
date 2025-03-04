@@ -19,7 +19,8 @@ void Imagen::setAlto(int nuevoAlto) { alto = nuevoAlto; }
 int Imagen::getIntensidadMaxima() const { return intensidadMaxima; }
 void Imagen::setIntensidadMaxima(int nuevaIntensidadMaxima) { intensidadMaxima = nuevaIntensidadMaxima; }
 
-std::vector<std::vector<int>> Imagen::getPixeles() const { return pixeles; }
+std::vector<std::vector<int>>& Imagen::getPixeles() { return pixeles; }
+const std::vector<std::vector<int>>& Imagen::getPixeles() const { return pixeles; }
 void Imagen::setPixeles(const std::vector<std::vector<int>>& nuevaMatriz) { pixeles = nuevaMatriz; }
 
 // Método para cargar una imagen desde un archivo PGM (P2)
