@@ -11,6 +11,10 @@ using namespace std;
 #define RESET "\033[0m"
 
 bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
+    if(serieImagenes._____){
+        cout << RED << "Error: Volumen no cargado, use el comando para cargar uno antes de ejecutar este" << RESET << endl;
+        return false; 
+    }
     if(criterio == "minimo"){
         for(int i = 0; i < serieImagenes.____; i++){        //--> Este recorrería todas las imagenes
             for(int j = 0; j < serieImagenes._____; j++){   //--> Este recorrería de una imagen, su altura(eje Y). 
@@ -96,6 +100,10 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
 }
 
 bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
+    if(serieImagenes._____){
+        cout << RED << "Error: Volumen no cargado, use el comando para cargar uno antes de ejecutar este" << RESET << endl;
+        return false; 
+    }
     if(criterio == "minimo"){
         for(int i = 0; i < serieImagenes.____; i++){        //--> Este recorrería todas las imagenes
             for(int j = 0; j < serieImagenes._____; j++){   //--> Este recorrería de una imagen, su anchura (eje x). 
@@ -180,6 +188,10 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
     }
 }
 bool Sistema::proyeccion2D_z(string criterio, string nombreArchivo){
+    if(serieImagenes._____){
+        cout << RED << "Error: Volumen no cargado, use el comando para cargar uno antes de ejecutar este" << RESET << endl;
+        return false; 
+    }
     if(criterio == "minimo"){
         // Lo primero es copiar las dimensiones de la imagen de salida, puesto que sera de igual tamaño que cualquier imagen de la secuencia.
         imagenFinal.setAncho(secuenciaImagenes.________);
