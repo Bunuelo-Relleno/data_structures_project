@@ -11,12 +11,12 @@ using namespace std;
 class Sistema{
     public:
         Imagen imagenFinal;   //--> Será la imagen donde se guarda la proyeccion y se cargue en el archivo
-        //Volumen serieImagenes; //--> Será la serie de imagenes donde se guarde el volumen.
+        Volumen serieImagenes; //--> Será la serie de imagenes donde se guarde el volumen.
         ofstream archivo;        //--> Será el archivo donde se subira la imagen.
 
         Sistema(){
-            //Imagen imagenFinal;
-            //Volumen serieImagenes;
+            Imagen imagenFinal;
+            Volumen serieImagenes;
             ifstream archivo;
         }
         bool proyeccion2D_x(string criterio, string nombreArchivo);
