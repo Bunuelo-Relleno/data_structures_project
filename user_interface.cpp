@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include "Imagen.h"
 //#include <algorithm>
 
 using namespace std;
@@ -11,6 +12,9 @@ using namespace std;
 #define GREEN "\033[32m"
 #define YELLOW "\033[33m"
 #define RESET "\033[0m"
+
+// Variable global para manejar la imagen actual
+Imagen imagenActual;
 
 // Función para separar la entrada en tokens, de esta forma se sabe que comando es, si sus parametros son correctos, y cual es la informacion que acompaña al comando (archivo, criterio, tamaño, etc)
 vector<string> splitString(const string& entrada) {
@@ -108,8 +112,13 @@ bool procesarComando(const vector<string>& tokens) {
             cout << RED << "Error: La extension del archivo es incorrecta" << RESET << endl;
             return true;
         }
-        cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
-        cout << YELLOW << "La imagen " << tokens[1] << " ha sido cargada." << RESET << endl;
+        
+        if (imagenActual.cargarDesdeArchivo(tokens[1])) {
+            cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
+            cout << YELLOW << "La imagen " << tokens[1] << " ha sido cargada." << RESET << endl;
+        } else {
+            cout << RED << "Error: No se pudo cargar la imagen" << RESET << endl;
+        }
     }
     else if (comando == "cargar_volumen") {
         if (tokens.size() != 3) {
@@ -126,6 +135,7 @@ bool procesarComando(const vector<string>& tokens) {
         }
         cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
         cout << YELLOW << "Mostrando informacion de la imagen..." << RESET << endl;
+        imagenActual.infoImagen();
     }
     else if (comando == "info_volumen") {
         if (tokens.size() != 1) {

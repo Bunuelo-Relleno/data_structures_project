@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.tsx": "typescriptreact",
+        "fstream": "cpp",
+        "iostream": "cpp"
+    }
+}
