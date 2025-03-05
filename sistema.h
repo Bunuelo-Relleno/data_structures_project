@@ -4,7 +4,7 @@
 #include<iostream>
 #include<fstream>
 #include"Imagen.h"
-//#include"volumen.h"
+#include"volumen.h"
 
 using namespace std;
 
