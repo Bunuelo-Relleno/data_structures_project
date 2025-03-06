@@ -3,6 +3,8 @@
 #include <sstream>
 #include <vector>
 #include "Imagen.h"
+#include <fstream>
+#include "sistema.h"
 //#include <algorithm>
 
 using namespace std;
@@ -84,6 +86,8 @@ void mostrarAyuda() {
 
 // Procesa y valida los comandos
 bool procesarComando(const vector<string>& tokens) {
+    Sistema sistema;
+
     if (tokens.empty()) return true;
     
     const string& comando = tokens[0];
@@ -146,6 +150,7 @@ bool procesarComando(const vector<string>& tokens) {
         cout << YELLOW << "Mostrando informacion del volumen..." << RESET << endl;
     }
     else if (comando == "proyeccion2D") {
+        bool res = false;
         if (tokens.size() != 4) {
             cout << RED << "Error: Uso correcto: proyeccion2D (direccion) (criterio) (nombre_archivo.pgm)" << RESET << endl;
             return true;
@@ -154,8 +159,27 @@ bool procesarComando(const vector<string>& tokens) {
             cout << RED << "Error: La extension del archivo es incorrecta" << RESET << endl;
             return true;
         }
-        cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
-        cout << YELLOW << "La proyeccion 2D del volumen en memoria ha sido generada y almacenada en el archivo " << tokens[3] << RESET << endl;
+        else if(tokens[1] != "x" && tokens[1] != "y" && tokens[1] != "z"){
+            cout << RED << "Error: La direccion no es valida, intente con: x, y o z" << RESET << endl;
+            return true;
+        }
+        else if(tokens[2] != "minimo" && tokens[2] != "maximo" && tokens[3] != "promedio" && tokens[4] != "mediana"){
+            cout << RED << "Error: El criterio no es valido, intente con: minimo, maximo, promedio o mediana" << RESET << endl;
+            return true;
+        }
+        else if(tokens[1] == "x"){
+            res = sistema.proyeccion2D_x(tokens[2], tokens[3]);
+        }
+        else if(tokens[1] == "y"){
+            res = sistema.proyeccion2D_y(tokens[2], tokens[3]);
+        }
+        else if(tokens[1] == "z"){
+            res = sistema.proyeccion2D_z(tokens[2], tokens[3]);
+        }
+        if(res){
+            cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
+            cout << YELLOW << "La proyeccion 2D del volumen en memoria ha sido generada y almacenada en el archivo " << tokens[3] << RESET << endl;   
+        }
     }
     else if (comando == "codificar_imagen") {
         if (tokens.size() != 2) {
