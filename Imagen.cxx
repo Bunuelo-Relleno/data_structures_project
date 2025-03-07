@@ -11,7 +11,7 @@ std::string Imagen::getNombre() const { return nombre; }
 void Imagen::setNombre(const std::string& nuevoNombre) { nombre = nuevoNombre; }
 
 int Imagen::getAncho() const { return ancho; }
-void Imagen::setAncho(int nuevoAncho) { ancho = nuevoAncho; }s
+void Imagen::setAncho(int nuevoAncho) { ancho = nuevoAncho; }
 
 int Imagen::getAlto() const { return alto; }
 void Imagen::setAlto(int nuevoAlto) { alto = nuevoAlto; }

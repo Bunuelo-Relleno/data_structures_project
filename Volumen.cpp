@@ -23,8 +23,8 @@ bool Volumen::cargarVolumen(const std::string& nombreBase, int numImgs) {
     }
 
     if (!imagenes.empty()) { 
-        ancho = imagenes[0].ancho;
-        alto = imagenes[0].alto;
+        ancho = imagenes[0].getAncho();
+        alto = imagenes[0].getAlto();
     }
 
     std::cout << "El volumen " << nombreBase << "ha sido cargado." << std::endl;
