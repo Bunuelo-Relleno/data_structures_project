@@ -129,8 +129,30 @@ bool procesarComando(const vector<string>& tokens) {
             cout << RED << "Error: Uso correcto: cargar_volumen (nombre_base) (n_im)" << RESET << endl;
             return true;
         }
-        cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
-        cout << YELLOW << "El volumen " << tokens[1] << " ha sido cargado." << RESET << endl;
+        
+        string nombreBase = tokens[1];
+        int numImagenes;
+        
+        try {
+            numImagenes = stoi(tokens[2]);
+        } catch (exception& e) {
+            cout << RED << "Error: El número de imágenes debe ser un valor entero válido." << RESET << endl;
+            return true;
+        }
+        
+        /*
+            if (numImagenes <= 0 || numImagenes > 99) {
+                cout << RED << "Error: La cantidad de imágenes debe estar en el rango 1-99." << RESET << endl;
+            return true;
+        }
+        */
+    
+        if (sistema.serieImagenes.cargarVolumen(nombreBase, numImagenes)) {
+            cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
+            cout << YELLOW << "El volumen " << nombreBase << " ha sido cargado." << RESET << endl;
+        } else {
+            cout << RED << "Error: El volumen " << nombreBase << " no ha podido ser cargado." << RESET << endl;
+        }
     }
     else if (comando == "info_imagen") {
         if (tokens.size() != 1) {
@@ -146,9 +168,14 @@ bool procesarComando(const vector<string>& tokens) {
             cout << RED << "Error: Uso correcto: info_volumen" << RESET << endl;
             return true;
         }
-        cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
-        cout << YELLOW << "Mostrando informacion del volumen..." << RESET << endl;
-    }
+    
+        if (sistema.serieImagenes.getNumImagenes() == 0) {
+            cout << RED << "No hay un volumen cargado en memoria." << RESET << endl;
+        } else {
+            cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
+            sistema.serieImagenes.infoVolumen();
+        }
+    }    
     else if (comando == "proyeccion2D") {
         bool res = false;
         if (tokens.size() != 4) {
