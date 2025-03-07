@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <string>
 
 Volumen::Volumen() : nombreVolumen(""), numImagenes(0), ancho(0), alto(0) {}
 
@@ -42,6 +43,18 @@ void Volumen::infoVolumen() const {
     }
 }
 
+int Volumen::getAlto() const { 
+    return alto;
+}
+
+int Volumen::getAncho() const { 
+    return ancho;
+}
+
+std::string Volumen::getNombreVolumen() const {
+    return nombreVolumen;
+}
+
 Imagen Volumen::getImagen(int index) const {
     if (index < 0 || index >= numImagenes) {
         std::cerr << "Error: Índice de imagen fuera de rango." << std::endl;
@@ -53,3 +66,5 @@ Imagen Volumen::getImagen(int index) const {
 int Volumen::getNumImagenes() const {
     return numImagenes;
 }
+
+
