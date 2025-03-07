@@ -143,12 +143,10 @@ bool procesarComando(const vector<string>& tokens) {
             return true;
         }
         
-        /*
-            if (numImagenes <= 0 || numImagenes > 99) {
-                cout << RED << "Error: La cantidad de imágenes debe estar en el rango 1-99." << RESET << endl;
-            return true;
+        if (numImagenes <= 0 || numImagenes > 99) {
+            cout << RED << "Error: La cantidad de imágenes debe estar en el rango 1-99." << RESET << endl;
+        return true;
         }
-        */
     
         if (sistema.serieImagenes.cargarVolumen(nombreBase, numImagenes)) {
             cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
