@@ -136,12 +136,24 @@ bool procesarComando(const vector<string>& tokens) {
         string nombreBase = tokens[1];
         int numImagenes;
         
-        try {
-            numImagenes = stoi(tokens[2]);
-        } catch (exception& e) {
+        string numImagenesStr = tokens[2];
+        bool esNumero = true;
+
+        // Verificar que todos los caracteres sean dígitos
+        for (char c : numImagenesStr) {
+            if (!isdigit(c)) {
+                esNumero = false;
+                break;
+            }
+        }
+
+        if (!esNumero) {
             cout << RED << "Error: El número de imágenes debe ser un valor entero válido." << RESET << endl;
             return true;
         }
+
+        // Convertir a entero después de validar
+        numImagenes = stoi(numImagenesStr);
         
         if (numImagenes <= 0 || numImagenes > 99) {
             cout << RED << "Error: La cantidad de imágenes debe estar en el rango 1-99." << RESET << endl;
