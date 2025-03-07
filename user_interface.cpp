@@ -18,6 +18,9 @@ using namespace std;
 // Variable global para manejar la imagen actual
 Imagen imagenActual;
 
+// Variable global para manejar el sistema
+Sistema sistema;
+
 // Función para separar la entrada en tokens, de esta forma se sabe que comando es, si sus parametros son correctos, y cual es la informacion que acompaña al comando (archivo, criterio, tamaño, etc)
 vector<string> splitString(const string& entrada) {
     vector<string> tokens;
@@ -86,7 +89,7 @@ void mostrarAyuda() {
 
 // Procesa y valida los comandos
 bool procesarComando(const vector<string>& tokens) {
-    Sistema sistema;
+
 
     if (tokens.empty()) return true;
     
