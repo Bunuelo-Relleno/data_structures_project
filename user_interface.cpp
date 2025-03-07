@@ -203,7 +203,7 @@ bool procesarComando(const vector<string>& tokens) {
             cout << RED << "Error: La direccion no es valida, intente con: x, y o z" << RESET << endl;
             return true;
         }
-        else if(tokens[2] != "minimo" && tokens[2] != "maximo" && tokens[3] != "promedio" && tokens[4] != "mediana"){
+        else if(tokens[2] != "minimo" && tokens[2] != "maximo" && tokens[2] != "promedio" && tokens[2] != "mediana"){
             cout << RED << "Error: El criterio no es valido, intente con: minimo, maximo, promedio o mediana" << RESET << endl;
             return true;
         }
