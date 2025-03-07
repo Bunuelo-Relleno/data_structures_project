@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+// Clase que representa una imagen en escala de grises en formato PGM
 class Imagen {
 private:
     std::string nombre;

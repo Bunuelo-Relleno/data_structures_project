@@ -19,8 +19,8 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
     }
     
     // Inicializar la imagen final
-    imagenFinal = Imagen(); // Crear una nueva imagen vacía
-    imagenFinal.setNombre(nombreArchivo);  // Establecer el nombre del archivo
+    imagenFinal = Imagen();
+    imagenFinal.setNombre(nombreArchivo);
     imagenFinal.setAlto(serieImagenes.getAlto());
     imagenFinal.setAncho(serieImagenes.getNumImagenes());
     
@@ -30,8 +30,7 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
         imagenFinal.getPixeles()[i].resize(imagenFinal.getAncho());
     }
     
-    // Asegurarse de que la intensidad máxima tenga un valor inicial válido
-    imagenFinal.setIntensidadMaxima(1);  // Valor inicial que será actualizado más tarde
+    imagenFinal.setIntensidadMaxima(1);
     
     if(criterio == "minimo"){
         for(int i = 0; i < serieImagenes.getNumImagenes(); i++){
@@ -42,7 +41,7 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
                         min = serieImagenes.getImagenes()[i].getPixeles()[j][k];
                     }
                 }
-                imagenFinal.getPixeles()[j][i] = min;  // Nota: cambiado de push_back a asignación directa
+                imagenFinal.getPixeles()[j][i] = min;
             }
         }
     }
@@ -55,7 +54,7 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
                         max = serieImagenes.getImagenes()[i].getPixeles()[j][k];
                     }
                 }
-                imagenFinal.getPixeles()[j][i] = max;  // Nota: cambiado de push_back a asignación directa
+                imagenFinal.getPixeles()[j][i] = max;
             }
         }
     }
@@ -68,7 +67,7 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
                     cont++;
                 }
                 prom /= cont;
-                imagenFinal.getPixeles()[j][i] = prom;  // Nota: cambiado de push_back a asignación directa
+                imagenFinal.getPixeles()[j][i] = prom;
             }
         }
     }
@@ -89,7 +88,7 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
                 else{
                     med = orden[orden.size()/2];
                 }
-                imagenFinal.getPixeles()[j][i] = med;  // Nota: cambiado de push_back a asignación directa
+                imagenFinal.getPixeles()[j][i] = med;
             }
         }
     }
@@ -104,7 +103,6 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
         }
     }
     
-    // Asegurarse de que la intensidad máxima sea al menos 1
     max_pixel = max(1, max_pixel);
     imagenFinal.setIntensidadMaxima(max_pixel);
     
@@ -133,8 +131,8 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
     }
     
     // Inicializar la imagen final
-    imagenFinal = Imagen(); // Crear una nueva imagen vacía
-    imagenFinal.setNombre(nombreArchivo);  // Establecer el nombre del archivo
+    imagenFinal = Imagen();
+    imagenFinal.setNombre(nombreArchivo);
     imagenFinal.setAlto(serieImagenes.getNumImagenes());
     imagenFinal.setAncho(serieImagenes.getAncho());
     
@@ -144,8 +142,7 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
         imagenFinal.getPixeles()[i].resize(imagenFinal.getAncho());
     }
     
-    // Asegurarse de que la intensidad máxima tenga un valor inicial válido
-    imagenFinal.setIntensidadMaxima(1);  // Valor inicial que será actualizado más tarde
+    imagenFinal.setIntensidadMaxima(1);
     
     if(criterio == "minimo"){
         for(int i = 0; i < serieImagenes.getNumImagenes(); i++){
@@ -156,7 +153,7 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
                         min = serieImagenes.getImagenes()[i].getPixeles()[k][j];
                     }
                 }
-                imagenFinal.getPixeles()[i][j] = min;  // Nota: cambiado de push_back a asignación directa
+                imagenFinal.getPixeles()[i][j] = min;
             }
         }
     }
@@ -169,7 +166,7 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
                         max = serieImagenes.getImagenes()[i].getPixeles()[k][j];
                     }
                 }
-                imagenFinal.getPixeles()[i][j] = max;  // Nota: cambiado de push_back a asignación directa
+                imagenFinal.getPixeles()[i][j] = max;
             }
         }
     }
@@ -182,7 +179,7 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
                     cont++;
                 }
                 prom /= cont;
-                imagenFinal.getPixeles()[i][j] = prom;  // Nota: cambiado de push_back a asignación directa
+                imagenFinal.getPixeles()[i][j] = prom;
             }
         }
     }
@@ -203,7 +200,7 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
                 else{
                     med = orden[orden.size()/2];
                 }
-                imagenFinal.getPixeles()[i][j] = med;  // Nota: cambiado de push_back a asignación directa
+                imagenFinal.getPixeles()[i][j] = med;
             }
         }
     }
@@ -218,7 +215,6 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
         }
     }
     
-    // Asegurarse de que la intensidad máxima sea al menos 1
     max_pixel = max(1, max_pixel);
     imagenFinal.setIntensidadMaxima(max_pixel);
     
@@ -247,8 +243,8 @@ bool Sistema::proyeccion2D_z(string criterio, string nombreArchivo){
     }
     
     // Inicializar la imagen final
-    imagenFinal = Imagen(); // Crear una nueva imagen vacía
-    imagenFinal.setNombre(nombreArchivo);  // Establecer el nombre del archivo
+    imagenFinal = Imagen();
+    imagenFinal.setNombre(nombreArchivo);
     imagenFinal.setAncho(serieImagenes.getAncho());
     imagenFinal.setAlto(serieImagenes.getAlto());
     
@@ -258,8 +254,7 @@ bool Sistema::proyeccion2D_z(string criterio, string nombreArchivo){
         imagenFinal.getPixeles()[i].resize(imagenFinal.getAncho());
     }
     
-    // Asegurarse de que la intensidad máxima tenga un valor inicial válido
-    imagenFinal.setIntensidadMaxima(1);  // Valor inicial que será actualizado más tarde
+    imagenFinal.setIntensidadMaxima(1);
     
     if(criterio == "minimo"){
         // Inicializar con el valor máximo posible
@@ -348,10 +343,8 @@ bool Sistema::proyeccion2D_z(string criterio, string nombreArchivo){
                     mediana.push_back(serieImagenes.getImagenes()[z].getPixeles()[y][x]);
                 }
                 
-                // Ordenar los valores
                 sort(mediana.begin(), mediana.end());
                 
-                // Calcular la mediana
                 if(mediana.size() % 2 == 0){
                     imagenFinal.getPixeles()[y][x] = (mediana[mediana.size()/2] + mediana[(mediana.size()/2)-1]) / 2;
                 } else {
@@ -371,7 +364,6 @@ bool Sistema::proyeccion2D_z(string criterio, string nombreArchivo){
         }
     }
     
-    // Asegurarse de que la intensidad máxima sea al menos 1
     max_pixel = max(1, max_pixel);
     imagenFinal.setIntensidadMaxima(max_pixel);
     
