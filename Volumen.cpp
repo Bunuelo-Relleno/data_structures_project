@@ -55,6 +55,10 @@ std::string Volumen::getNombreVolumen() const {
     return nombreVolumen;
 }
 
+const std::vector<Imagen>& Volumen::getImagenes() const {
+    return imagenes;
+}
+
 Imagen Volumen::getImagen(int index) const {
     if (index < 0 || index >= numImagenes) {
         std::cerr << "Error: Índice de imagen fuera de rango." << std::endl;
