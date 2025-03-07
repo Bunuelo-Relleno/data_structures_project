@@ -47,7 +47,7 @@ bool Imagen::cargarDesdeArchivo(const std::string& nombreArchivo) {
     archivo >> ancho >> alto >> intensidadMaxima;
 
     // Validaciones
-    if (ancho <= 0 || alto <= 0 || intensidadMaxima <= 0 || intensidadMaxima > 255) {
+    if (ancho <= 0 || alto <= 0 || intensidadMaxima < 0 || intensidadMaxima > 255) {
         std::cerr << "Error: Valores inválidos en la cabecera del archivo" << std::endl;
         return false;
     }

@@ -1,6 +1,8 @@
 #include <iostream>
 #include <algorithm>
 #include "sistema.h"
+#include "Imagen.h"
+#include "Volumen.h"
 
 using namespace std;
 
