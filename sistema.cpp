@@ -3,6 +3,7 @@
 #include "sistema.h"
 #include "Imagen.h"
 #include "Volumen.h"
+#include <map>
 
 using namespace std;
 
@@ -34,9 +35,9 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
     
     if(criterio == "minimo"){
         for(int i = 0; i < serieImagenes.getNumImagenes(); i++){
-            for(int j = 0; j < serieImagenes.getImagenes()[i].getAlto(); j++){
+            for(int j = 0; j < serieImagenes.getImagenes()[i].getAncho(); j++){
                 int min = 256;
-                for(int k = 0; k < serieImagenes.getImagenes()[i].getAncho(); k++){
+                for(int k = 0; k < serieImagenes.getImagenes()[i].getAlto(); k++){
                     if(serieImagenes.getImagenes()[i].getPixeles()[j][k] < min){
                         min = serieImagenes.getImagenes()[i].getPixeles()[j][k];
                     }
@@ -47,9 +48,9 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
     }
     else if(criterio == "maximo"){
         for(int i = 0; i < serieImagenes.getNumImagenes(); i++){
-            for(int j = 0; j < serieImagenes.getImagenes()[i].getAlto(); j++){
+            for(int j = 0; j < serieImagenes.getImagenes()[i].getAncho(); j++){
                 int max = -1;
-                for(int k = 0; k < serieImagenes.getImagenes()[i].getAncho(); k++){
+                for(int k = 0; k < serieImagenes.getImagenes()[i].getAlto(); k++){
                     if (serieImagenes.getImagenes()[i].getPixeles()[j][k] > max){
                         max = serieImagenes.getImagenes()[i].getPixeles()[j][k];
                     }
@@ -60,9 +61,9 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
     }
     else if(criterio == "promedio"){
         for(int i = 0; i < serieImagenes.getNumImagenes(); i++){
-            for(int j = 0; j < serieImagenes.getImagenes()[i].getAlto(); j++){
+            for(int j = 0; j < serieImagenes.getImagenes()[i].getAncho(); j++){
                 int prom = 0, cont = 0;
-                for(int k = 0; k < serieImagenes.getImagenes()[i].getAncho(); k++){
+                for(int k = 0; k < serieImagenes.getImagenes()[i].getAlto(); k++){
                     prom += serieImagenes.getImagenes()[i].getPixeles()[j][k];
                     cont++;
                 }
@@ -73,9 +74,9 @@ bool Sistema::proyeccion2D_x(string criterio, string nombreArchivo){
     }
     else if(criterio == "mediana"){
         for(int i = 0; i < serieImagenes.getNumImagenes(); i++){
-            for(int j = 0; j < serieImagenes.getImagenes()[i].getAlto(); j++){
+            for(int j = 0; j < serieImagenes.getImagenes()[i].getAncho(); j++){
                 vector<int> orden;
-                for(int k = 0; k < serieImagenes.getImagenes()[i].getAncho(); k++){
+                for(int k = 0; k < serieImagenes.getImagenes()[i].getAlto(); k++){
                     orden.push_back(serieImagenes.getImagenes()[i].getPixeles()[j][k]);
                 }
 
@@ -146,9 +147,9 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
     
     if(criterio == "minimo"){
         for(int i = 0; i < serieImagenes.getNumImagenes(); i++){
-            for(int j = 0; j < serieImagenes.getImagenes()[i].getAncho(); j++){
+            for(int j = 0; j < serieImagenes.getImagenes()[i].getAlto(); j++){
                 int min = 256;
-                for(int k = 0; k < serieImagenes.getImagenes()[i].getAlto(); k++){
+                for(int k = 0; k < serieImagenes.getImagenes()[i].getAncho(); k++){
                     if(serieImagenes.getImagenes()[i].getPixeles()[k][j] < min){
                         min = serieImagenes.getImagenes()[i].getPixeles()[k][j];
                     }
@@ -159,9 +160,9 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
     }
     else if(criterio == "maximo"){
         for(int i = 0; i < serieImagenes.getNumImagenes(); i++){
-            for(int j = 0; j < serieImagenes.getImagenes()[i].getAncho(); j++){
+            for(int j = 0; j < serieImagenes.getImagenes()[i].getAlto(); j++){
                 int max = -1;
-                for(int k = 0; k < serieImagenes.getImagenes()[i].getAlto(); k++){
+                for(int k = 0; k < serieImagenes.getImagenes()[i].getAncho(); k++){
                     if (serieImagenes.getImagenes()[i].getPixeles()[k][j] > max){
                         max = serieImagenes.getImagenes()[i].getPixeles()[k][j];
                     }
@@ -172,9 +173,9 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
     }
     else if(criterio == "promedio"){
         for(int i = 0; i < serieImagenes.getNumImagenes(); i++){
-            for(int j = 0; j < serieImagenes.getImagenes()[i].getAncho(); j++){
+            for(int j = 0; j < serieImagenes.getImagenes()[i].getAlto(); j++){
                 int prom = 0, cont = 0;
-                for(int k = 0; k < serieImagenes.getImagenes()[i].getAlto(); k++){
+                for(int k = 0; k < serieImagenes.getImagenes()[i].getAncho(); k++){
                     prom += serieImagenes.getImagenes()[i].getPixeles()[k][j];
                     cont++;
                 }
@@ -185,9 +186,9 @@ bool Sistema::proyeccion2D_y(string criterio, string nombreArchivo){
     }
     else if(criterio == "mediana"){
         for(int i = 0; i < serieImagenes.getNumImagenes(); i++){
-            for(int j = 0; j < serieImagenes.getImagenes()[i].getAncho(); j++){
+            for(int j = 0; j < serieImagenes.getImagenes()[i].getAlto(); j++){
                 vector<int> orden;
-                for(int k = 0; k < serieImagenes.getImagenes()[i].getAlto(); k++){
+                for(int k = 0; k < serieImagenes.getImagenes()[i].getAncho(); k++){
                     orden.push_back(serieImagenes.getImagenes()[i].getPixeles()[k][j]);
                 }
 

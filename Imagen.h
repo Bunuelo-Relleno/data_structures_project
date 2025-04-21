@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 // Clase que representa una imagen en escala de grises en formato PGM
 class Imagen {
@@ -43,6 +44,9 @@ public:
 
     // Validación de imagen cargada
     bool esValida() const;
+
+    // Método auxiliar para codificacion
+    std::map<int, unsigned long> calcular_frecuencias();
 };
 
 #endif // IMAGEN_H

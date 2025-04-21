@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <map>
 
 // Constructor por defecto
 Imagen::Imagen() : nombre(""), ancho(0), alto(0), intensidadMaxima(0) {}
@@ -115,4 +116,17 @@ void Imagen::infoImagen() const {
 // Validación de imagen cargada
 bool Imagen::esValida() const {
     return !nombre.empty() && ancho > 0 && alto > 0 && intensidadMaxima > 0 && !pixeles.empty();
+}
+
+// Cuenta el número de veces que se repite la intensidad de un pixel dentro de la imagen. Usarla para codificar la imagen.
+std::map<int, unsigned long> Imagen::calcular_frecuencias() {
+    std::map<int, unsigned long> frecuencias;
+    
+    for (int i = 0; i < this->alto; i++) {
+        for (int j = 0; j < this->ancho; j++) {
+            unsigned char pixel = this->pixeles[i][j];
+            frecuencias[pixel]++;
+        }
+    }
+    return frecuencias;
 }

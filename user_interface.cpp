@@ -5,6 +5,7 @@
 #include "Imagen.h"
 #include <fstream>
 #include "sistema.h"
+#include "ArbolCodificacion.h"
 //#include <algorithm>
 
 using namespace std;
@@ -20,6 +21,9 @@ Imagen imagenActual;
 
 // Variable global para manejar el sistema
 Sistema sistema;
+
+// Variable global para manejar el árbol de Huffman
+ArbolCodificacion<int> arbolCodificacion;
 
 // Función para separar la entrada en tokens, de esta forma se sabe que comando es, si sus parametros son correctos, y cual es la informacion que acompaña al comando (archivo, criterio, tamaño, etc)
 vector<string> splitString(const string& entrada) {
@@ -84,7 +88,7 @@ void mostrarAyuda() {
     cout << "- codificar_imagen (nombre_archivo.huf)" << endl;
     cout << "- decodificar_archivo (nombre_archivo.huf) (nombre_imagen.pgm)" << endl;
     cout << "- segmentar (salida_imagen.pgm) (sx1) (sy1) (sl1) [sx2 sy2 sl2 ...]" << endl;
-    cout << "- quit (para salir)" << endl;
+    cout << "- salir (para salir)" << endl;
 }
 
 // Procesa y valida los comandos
@@ -95,7 +99,7 @@ bool procesarComando(const vector<string>& tokens) {
     
     const string& comando = tokens[0];
     
-    if (comando == "quit") {
+    if (comando == "salir") {
         return false;
     }
 
@@ -230,6 +234,12 @@ bool procesarComando(const vector<string>& tokens) {
             cout << RED << "Error: La extension del archivo es incorrecta" << RESET << endl;
             return true;
         }
+        if (imagenActual.esValida()) {
+            //arbolCodificacion.codificarImagen(imagenActual, tokens[1]);
+        } else {
+            cout << RED << "Error: No hay una imagen válida para codificar" << RESET << endl;
+            return true;
+        }
         cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
         cout << YELLOW << "La imagen en memoria ha sido codificada exitosamente y almacenada en el archivo " << tokens[1] << RESET << endl;
     }
@@ -246,8 +256,15 @@ bool procesarComando(const vector<string>& tokens) {
             cout << RED << "Error: La extension del segundo archivo es incorrecta" << RESET << endl;
             return true;
         }
-        cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
-        cout << YELLOW << "El archivo " << tokens[1] << " ha sido decodificado exitosamente, y la imagen correspondiente se ha almacenado en el archivo " << tokens[2] << RESET << endl;
+        /*try {
+            Imagen imagenDecodificada;
+            arbolCodificacion.decodificarImagen(tokens[1], imagenDecodificada);
+            if (!imagenDecodificada.guardarEnArchivo(tokens[2])) return true;
+            cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
+            cout << YELLOW << "El archivo " << tokens[1] << " ha sido decodificado exitosamente, y la imagen correspondiente se ha almacenado en el archivo " << tokens[2] << RESET << endl;
+        } catch (const std::exception& e) {
+            cout << RED << "Error: " << e.what() << RESET << endl;
+        }*/
     }
     else if (comando == "segmentar") {
         if (tokens.size() < 5 || (tokens.size() - 2) % 3 != 0) {

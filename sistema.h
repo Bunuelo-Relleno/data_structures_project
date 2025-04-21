@@ -5,6 +5,7 @@
 #include<fstream>
 #include"Imagen.h"
 #include"Volumen.h"
+#include <map>
 
 using namespace std;
 
