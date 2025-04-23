@@ -261,10 +261,14 @@ bool procesarComando(const vector<string>& tokens) {
                 frecuenciasVector[pair.first] = pair.second;
             }
 
-            guardarArchivoHUF(tokens[1], ancho, alto, maxIntensidad, frecuenciasVector, bitsCodificados);
+            double compressionRatio = guardarArchivoHUF(tokens[1], ancho, alto, maxIntensidad, frecuenciasVector, bitsCodificados);
 
             cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
             cout << YELLOW << "La imagen en memoria ha sido codificada exitosamente y almacenada en el archivo " << tokens[1] << RESET << endl;
+            if (compressionRatio > 0) {
+                cout << YELLOW << "Ratio de compresión: " << compressionRatio << ":1" << endl;
+                cout << "(Un ratio mayor a 1 significa que el archivo fue comprimido, menor a 1 significa que aumentó de tamaño)" << RESET << endl;
+            }
         } else {
             cout << RED << "Error: No hay una imagen válida para codificar" << RESET << endl;
         }
