@@ -4,6 +4,8 @@
 #include "ArbolCodificacion.h"
 #include <map>
 #include <queue>
+#include <cstddef>
+#include <stdexcept>
 
 template <class T>
 ArbolCodificacion<T>::ArbolCodificacion() {
@@ -29,6 +31,11 @@ T ArbolCodificacion<T>::datoRaiz() {
     } else {
         throw std::runtime_error("El árbol está vacío.");
     }
+}
+
+template <class T>
+NodoCodificacion<T>* ArbolCodificacion<T>::obtenerRaiz() {
+    return this->raiz;
 }
 
 template <class T>

@@ -13,6 +13,7 @@ class ArbolCodificacion {
         ~ArbolCodificacion();
         bool esVacio();
         T datoRaiz();
+        NodoCodificacion<T>* obtenerRaiz();
         void fijarRaiz(NodoCodificacion<T>* raiz);
         void construirArbolCodificacion(std::map<T, unsigned long> frecuencias); // Usarlo dentro de codificar y decodificar
         // void codificarImagen(Imagen& imagen, const std::string& nombreArchivo);
