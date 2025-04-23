@@ -2,6 +2,8 @@
 #define _NODOCODIFICACION_HXX_
 
 #include "NodoCodificacion.h"
+#include <cstddef>
+#include <iostream>
 
 template <class T>
 NodoCodificacion<T>::NodoCodificacion() {

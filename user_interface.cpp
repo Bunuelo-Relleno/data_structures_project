@@ -6,6 +6,7 @@
 #include <fstream>
 #include "sistema.h"
 #include "ArbolCodificacion.h"
+#include "CodificadorHuffman.h"
 //#include <algorithm>
 
 using namespace std;
@@ -234,14 +235,43 @@ bool procesarComando(const vector<string>& tokens) {
             cout << RED << "Error: La extension del archivo es incorrecta" << RESET << endl;
             return true;
         }
+
         if (imagenActual.esValida()) {
-            //arbolCodificacion.codificarImagen(imagenActual, tokens[1]);
+            vector<vector<int>> pixeles = imagenActual.getPixeles();
+            int ancho = imagenActual.getAncho();
+            int alto = imagenActual.getAlto();
+            int maxIntensidad = imagenActual.getIntensidadMaxima();
+
+            // Convert vector to map for frequencies
+            map<int, unsigned long> frecuenciasMap = imagenActual.calcular_frecuencias();
+            
+            ArbolCodificacion<int> arbol;
+            arbol.construirArbolCodificacion(frecuenciasMap);
+            
+            // Get the root node
+            NodoCodificacion<int>* raiz = arbol.obtenerRaiz();
+            
+            // Generate codes and encode image
+            unordered_map<int, string> codigos = generarCodigos(raiz);
+            string bitsCodificados = codificarImagen(pixeles, codigos);
+
+            // Convert map back to vector for saving
+            vector<unsigned long> frecuenciasVector(maxIntensidad + 1, 0);
+            for (const auto& pair : frecuenciasMap) {
+                frecuenciasVector[pair.first] = pair.second;
+            }
+
+            double compressionRatio = guardarArchivoHUF(tokens[1], ancho, alto, maxIntensidad, frecuenciasVector, bitsCodificados);
+
+            cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
+            cout << YELLOW << "La imagen en memoria ha sido codificada exitosamente y almacenada en el archivo " << tokens[1] << RESET << endl;
+            if (compressionRatio > 0) {
+                cout << YELLOW << "Ratio de compresión: " << compressionRatio << ":1" << endl;
+                cout << "(Un ratio mayor a 1 significa que el archivo fue comprimido, menor a 1 significa que aumentó de tamaño)" << RESET << endl;
+            }
         } else {
             cout << RED << "Error: No hay una imagen válida para codificar" << RESET << endl;
-            return true;
         }
-        cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
-        cout << YELLOW << "La imagen en memoria ha sido codificada exitosamente y almacenada en el archivo " << tokens[1] << RESET << endl;
     }
     else if (comando == "decodificar_archivo") {
         if (tokens.size() != 3) {
