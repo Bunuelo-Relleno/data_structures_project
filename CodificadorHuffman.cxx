@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 #include <cstdint>
+#include <map>
+#include "ArbolCodificacion.h"
 
 template <class T>
 void recorrerArbol(NodoCodificacion<T>* nodo, const string& codigoActual, unordered_map<T, string>& codigos) {
@@ -107,6 +109,98 @@ double guardarArchivoHUF(const string& nombreArchivo, int ancho, int alto, int m
     // Return compression ratio (original/compressed)
     return static_cast<double>(originalSize) / compressedSize;
 }
+
+bool decodificarArchivoHUF(const std::string& nombreArchivoHUF, const std::string& nombreSalidaPGM) {
+    std::ifstream archivo(nombreArchivoHUF, std::ios::binary);
+    if (!archivo.is_open()) {
+        std::cerr << "No se pudo abrir el archivo .huf para lectura.\n";
+        return false;
+    }
+
+    // 1. Leer encabezado: ancho, alto, max intensidad
+    unsigned short ancho, alto;
+    unsigned char maxIntensidad;
+    archivo.read(reinterpret_cast<char*>(&ancho), sizeof(ancho));
+    archivo.read(reinterpret_cast<char*>(&alto), sizeof(alto));
+    archivo.read(reinterpret_cast<char*>(&maxIntensidad), sizeof(maxIntensidad));
+
+    // 2. Leer cantidad de intensidades usadas
+    unsigned char intensidadesUsadas;
+    archivo.read(reinterpret_cast<char*>(&intensidadesUsadas), sizeof(intensidadesUsadas));
+
+    // 3. Leer frecuencias
+    std::map<int, unsigned long> frecuencias;
+    for (int i = 0; i < intensidadesUsadas; ++i) {
+        unsigned char intensidad;
+        uint32_t frecuencia;
+        archivo.read(reinterpret_cast<char*>(&intensidad), sizeof(intensidad));
+        archivo.read(reinterpret_cast<char*>(&frecuencia), sizeof(frecuencia));
+        frecuencias[(int)intensidad] = frecuencia;
+    }
+
+    // 4. Construir árbol
+    ArbolCodificacion<int> arbol;
+    arbol.construirArbolCodificacion(frecuencias);
+    NodoCodificacion<int>* raiz = arbol.obtenerRaiz();
+
+    // 5. Leer bits codificados
+    std::string bits;
+    char byte;
+    while (archivo.read(&byte, 1)) {
+        for (int i = 7; i >= 0; --i) {
+            bits += ((byte >> i) & 1) ? '1' : '0';
+        }
+    }
+    archivo.close();
+
+    // 6. Decodificar bits usando el árbol
+    std::vector<std::vector<int>> imagen(alto, std::vector<int>(ancho));
+    int fila = 0, col = 0;
+    NodoCodificacion<int>* actual = raiz;
+    size_t totalPixeles = ancho * alto;
+    size_t pixelesDecodificados = 0;
+
+    for (char bit : bits) {
+        actual = (bit == '0') ? actual->obtenerHijoIzq() : actual->obtenerHijoDer();
+
+        if (actual->esHoja()) {
+            imagen[fila][col] = actual->obtenerSimbolo();
+            pixelesDecodificados++;
+            col++;
+            if (col == ancho) {
+                col = 0;
+                fila++;
+            }
+            if (pixelesDecodificados == totalPixeles) break;
+            actual = raiz;
+        }
+    }
+
+    // 7. Guardar imagen decodificada en formato PGM
+    std::ofstream salida(nombreSalidaPGM);
+    if (!salida.is_open()) {
+        std::cerr << "No se pudo crear el archivo de salida.\n";
+        return false;
+    }
+
+    salida << "P2\n";
+    //salida << "# Imagen decodificada desde Huffman\n";
+    salida << ancho << " " << alto << "\n";
+    salida << (int)maxIntensidad << "\n";
+
+    for (size_t i = 0; i < imagen.size(); ++i) {
+        for (int valor : imagen[i]) {
+            salida << valor << " ";
+        }
+        if (i != imagen.size() - 1) {//para que no sea añada una linea vacia al final uwu
+            salida << "\n";
+        }
+    }    
+
+    salida.close();
+    return true;
+}
+
 
 // Explicit template instantiations
 template void recorrerArbol<int>(NodoCodificacion<int>*, const string&, unordered_map<int, string>&);
