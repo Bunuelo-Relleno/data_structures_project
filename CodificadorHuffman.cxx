@@ -117,18 +117,18 @@ bool decodificarArchivoHUF(const std::string& nombreArchivoHUF, const std::strin
         return false;
     }
 
-    // 1. Leer encabezado: ancho, alto, max intensidad
+    //Leer encabezado: ancho, alto, max intensidad
     unsigned short ancho, alto;
     unsigned char maxIntensidad;
     archivo.read(reinterpret_cast<char*>(&ancho), sizeof(ancho));
     archivo.read(reinterpret_cast<char*>(&alto), sizeof(alto));
     archivo.read(reinterpret_cast<char*>(&maxIntensidad), sizeof(maxIntensidad));
 
-    // 2. Leer cantidad de intensidades usadas
+    //Leer cantidad de intensidades usadas
     unsigned char intensidadesUsadas;
     archivo.read(reinterpret_cast<char*>(&intensidadesUsadas), sizeof(intensidadesUsadas));
 
-    // 3. Leer frecuencias
+    //Leer frecuencias
     std::map<int, unsigned long> frecuencias;
     for (int i = 0; i < intensidadesUsadas; ++i) {
         unsigned char intensidad;
@@ -138,12 +138,12 @@ bool decodificarArchivoHUF(const std::string& nombreArchivoHUF, const std::strin
         frecuencias[(int)intensidad] = frecuencia;
     }
 
-    // 4. Construir árbol
+    //Construir arbol
     ArbolCodificacion<int> arbol;
     arbol.construirArbolCodificacion(frecuencias);
     NodoCodificacion<int>* raiz = arbol.obtenerRaiz();
 
-    // 5. Leer bits codificados
+    //Leer bits 
     std::string bits;
     char byte;
     while (archivo.read(&byte, 1)) {
@@ -153,7 +153,7 @@ bool decodificarArchivoHUF(const std::string& nombreArchivoHUF, const std::strin
     }
     archivo.close();
 
-    // 6. Decodificar bits usando el árbol
+    //Decodificar bits usando el árbol
     std::vector<std::vector<int>> imagen(alto, std::vector<int>(ancho));
     int fila = 0, col = 0;
     NodoCodificacion<int>* actual = raiz;
@@ -176,7 +176,7 @@ bool decodificarArchivoHUF(const std::string& nombreArchivoHUF, const std::strin
         }
     }
 
-    // 7. Guardar imagen decodificada en formato PGM
+    // Guardar imagen decodificada en formato PGM
     std::ofstream salida(nombreSalidaPGM);
     if (!salida.is_open()) {
         std::cerr << "No se pudo crear el archivo de salida.\n";
