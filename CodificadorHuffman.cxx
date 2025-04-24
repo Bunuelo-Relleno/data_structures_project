@@ -110,26 +110,25 @@ double guardarArchivoHUF(const string& nombreArchivo, int ancho, int alto, int m
     return static_cast<double>(originalSize) / compressedSize;
 }
 
-bool decodificarArchivoHUF(const std::string& nombreArchivoHUF, const std::string& nombreSalidaPGM) {
+bool leerArchivoHUF(const std::string& nombreArchivoHUF,
+                    unsigned short& ancho,
+                    unsigned short& alto,
+                    unsigned char& maxIntensidad,
+                    std::map<int, unsigned long>& frecuencias,
+                    std::string& bits) {
     std::ifstream archivo(nombreArchivoHUF, std::ios::binary);
     if (!archivo.is_open()) {
         std::cerr << "No se pudo abrir el archivo .huf para lectura.\n";
         return false;
     }
 
-    //Leer encabezado: ancho, alto, max intensidad
-    unsigned short ancho, alto;
-    unsigned char maxIntensidad;
     archivo.read(reinterpret_cast<char*>(&ancho), sizeof(ancho));
     archivo.read(reinterpret_cast<char*>(&alto), sizeof(alto));
     archivo.read(reinterpret_cast<char*>(&maxIntensidad), sizeof(maxIntensidad));
 
-    //Leer cantidad de intensidades usadas
     unsigned char intensidadesUsadas;
     archivo.read(reinterpret_cast<char*>(&intensidadesUsadas), sizeof(intensidadesUsadas));
 
-    //Leer frecuencias
-    std::map<int, unsigned long> frecuencias;
     for (int i = 0; i < intensidadesUsadas; ++i) {
         unsigned char intensidad;
         uint32_t frecuencia;
@@ -138,22 +137,32 @@ bool decodificarArchivoHUF(const std::string& nombreArchivoHUF, const std::strin
         frecuencias[(int)intensidad] = frecuencia;
     }
 
-    //Construir arbol
-    ArbolCodificacion<int> arbol;
-    arbol.construirArbolCodificacion(frecuencias);
-    NodoCodificacion<int>* raiz = arbol.obtenerRaiz();
-
-    //Leer bits 
-    std::string bits;
     char byte;
     while (archivo.read(&byte, 1)) {
         for (int i = 7; i >= 0; --i) {
             bits += ((byte >> i) & 1) ? '1' : '0';
         }
     }
-    archivo.close();
 
-    //Decodificar bits usando el árbol
+    archivo.close();
+    return true;
+}
+
+
+bool decodificarArchivoHUF(const std::string& nombreArchivoHUF, const std::string& nombreSalidaPGM) {
+    unsigned short ancho, alto;
+    unsigned char maxIntensidad;
+    std::map<int, unsigned long> frecuencias;
+    std::string bits;
+
+    if (!leerArchivoHUF(nombreArchivoHUF, ancho, alto, maxIntensidad, frecuencias, bits)) {
+        return false;
+    }
+
+    ArbolCodificacion<int> arbol;
+    arbol.construirArbolCodificacion(frecuencias);
+    NodoCodificacion<int>* raiz = arbol.obtenerRaiz();
+
     std::vector<std::vector<int>> imagen(alto, std::vector<int>(ancho));
     int fila = 0, col = 0;
     NodoCodificacion<int>* actual = raiz;
@@ -162,7 +171,6 @@ bool decodificarArchivoHUF(const std::string& nombreArchivoHUF, const std::strin
 
     for (char bit : bits) {
         actual = (bit == '0') ? actual->obtenerHijoIzq() : actual->obtenerHijoDer();
-
         if (actual->esHoja()) {
             imagen[fila][col] = actual->obtenerSimbolo();
             pixelesDecodificados++;
@@ -176,26 +184,22 @@ bool decodificarArchivoHUF(const std::string& nombreArchivoHUF, const std::strin
         }
     }
 
-    // Guardar imagen decodificada en formato PGM
     std::ofstream salida(nombreSalidaPGM);
     if (!salida.is_open()) {
         std::cerr << "No se pudo crear el archivo de salida.\n";
         return false;
     }
 
-    salida << "P2\n";
-    //salida << "# Imagen decodificada desde Huffman\n";
-    salida << ancho << " " << alto << "\n";
-    salida << (int)maxIntensidad << "\n";
+    salida << "P2\n" << ancho << " " << alto << "\n" << (int)maxIntensidad << "\n";
 
     for (size_t i = 0; i < imagen.size(); ++i) {
         for (int valor : imagen[i]) {
             salida << valor << " ";
         }
-        if (i != imagen.size() - 1) {//para que no sea añada una linea vacia al final uwu
+        if (i != imagen.size() - 1) { //para que no se añada una linea vacía al final del archivo
             salida << "\n";
         }
-    }    
+    }
 
     salida.close();
     return true;
