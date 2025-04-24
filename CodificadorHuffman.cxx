@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 #include <cstdint>
+#include <map>
+#include "ArbolCodificacion.h"
 
 template <class T>
 void recorrerArbol(NodoCodificacion<T>* nodo, const string& codigoActual, unordered_map<T, string>& codigos) {
@@ -107,6 +109,102 @@ double guardarArchivoHUF(const string& nombreArchivo, int ancho, int alto, int m
     // Return compression ratio (original/compressed)
     return static_cast<double>(originalSize) / compressedSize;
 }
+
+bool leerArchivoHUF(const std::string& nombreArchivoHUF,
+                    unsigned short& ancho,
+                    unsigned short& alto,
+                    unsigned char& maxIntensidad,
+                    std::map<int, unsigned long>& frecuencias,
+                    std::string& bits) {
+    std::ifstream archivo(nombreArchivoHUF, std::ios::binary);
+    if (!archivo.is_open()) {
+        std::cerr << "No se pudo abrir el archivo .huf para lectura.\n";
+        return false;
+    }
+
+    archivo.read(reinterpret_cast<char*>(&ancho), sizeof(ancho));
+    archivo.read(reinterpret_cast<char*>(&alto), sizeof(alto));
+    archivo.read(reinterpret_cast<char*>(&maxIntensidad), sizeof(maxIntensidad));
+
+    unsigned char intensidadesUsadas;
+    archivo.read(reinterpret_cast<char*>(&intensidadesUsadas), sizeof(intensidadesUsadas));
+
+    for (int i = 0; i < intensidadesUsadas; ++i) {
+        unsigned char intensidad;
+        uint32_t frecuencia;
+        archivo.read(reinterpret_cast<char*>(&intensidad), sizeof(intensidad));
+        archivo.read(reinterpret_cast<char*>(&frecuencia), sizeof(frecuencia));
+        frecuencias[(int)intensidad] = frecuencia;
+    }
+
+    char byte;
+    while (archivo.read(&byte, 1)) {
+        for (int i = 7; i >= 0; --i) {
+            bits += ((byte >> i) & 1) ? '1' : '0';
+        }
+    }
+
+    archivo.close();
+    return true;
+}
+
+
+bool decodificarArchivoHUF(const std::string& nombreArchivoHUF, const std::string& nombreSalidaPGM) {
+    unsigned short ancho, alto;
+    unsigned char maxIntensidad;
+    std::map<int, unsigned long> frecuencias;
+    std::string bits;
+
+    if (!leerArchivoHUF(nombreArchivoHUF, ancho, alto, maxIntensidad, frecuencias, bits)) {
+        return false;
+    }
+
+    ArbolCodificacion<int> arbol;
+    arbol.construirArbolCodificacion(frecuencias);
+    NodoCodificacion<int>* raiz = arbol.obtenerRaiz();
+
+    std::vector<std::vector<int>> imagen(alto, std::vector<int>(ancho));
+    int fila = 0, col = 0;
+    NodoCodificacion<int>* actual = raiz;
+    size_t totalPixeles = ancho * alto;
+    size_t pixelesDecodificados = 0;
+
+    for (char bit : bits) {
+        actual = (bit == '0') ? actual->obtenerHijoIzq() : actual->obtenerHijoDer();
+        if (actual->esHoja()) {
+            imagen[fila][col] = actual->obtenerSimbolo();
+            pixelesDecodificados++;
+            col++;
+            if (col == ancho) {
+                col = 0;
+                fila++;
+            }
+            if (pixelesDecodificados == totalPixeles) break;
+            actual = raiz;
+        }
+    }
+
+    std::ofstream salida(nombreSalidaPGM);
+    if (!salida.is_open()) {
+        std::cerr << "No se pudo crear el archivo de salida.\n";
+        return false;
+    }
+
+    salida << "P2\n" << ancho << " " << alto << "\n" << (int)maxIntensidad << "\n";
+
+    for (size_t i = 0; i < imagen.size(); ++i) {
+        for (int valor : imagen[i]) {
+            salida << valor << " ";
+        }
+        if (i != imagen.size() - 1) { //para que no se añada una linea vacía al final del archivo
+            salida << "\n";
+        }
+    }
+
+    salida.close();
+    return true;
+}
+
 
 // Explicit template instantiations
 template void recorrerArbol<int>(NodoCodificacion<int>*, const string&, unordered_map<int, string>&);

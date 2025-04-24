@@ -279,23 +279,28 @@ bool procesarComando(const vector<string>& tokens) {
             return true;
         }
         else if(!validarExtension(tokens[1], ".huf")){
-            cout << RED << "Error: La extension del primer archivo es incorrecta" << RESET << endl;
+            cout << RED << "Error: La extensión del primer archivo es incorrecta" << RESET << endl;
             return true;
         }
         else if(!validarExtension(tokens[2], ".pgm")){
-            cout << RED << "Error: La extension del segundo archivo es incorrecta" << RESET << endl;
+            cout << RED << "Error: La extensión del segundo archivo es incorrecta" << RESET << endl;
             return true;
         }
-        /*try {
-            Imagen imagenDecodificada;
-            arbolCodificacion.decodificarImagen(tokens[1], imagenDecodificada);
-            if (!imagenDecodificada.guardarEnArchivo(tokens[2])) return true;
-            cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
-            cout << YELLOW << "El archivo " << tokens[1] << " ha sido decodificado exitosamente, y la imagen correspondiente se ha almacenado en el archivo " << tokens[2] << RESET << endl;
+    
+        // Intentar decodificar
+        try {
+            bool exito = decodificarArchivoHUF(tokens[1], tokens[2]);
+            if (exito) {
+                cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
+                cout << YELLOW << "El archivo " << tokens[1] << " ha sido decodificado exitosamente, y la imagen correspondiente se ha almacenado en el archivo " << tokens[2] << RESET << endl;
+            } else {
+                cout << RED << "Error: El archivo no pudo ser decodificado correctamente." << RESET << endl;
+            }
         } catch (const std::exception& e) {
-            cout << RED << "Error: " << e.what() << RESET << endl;
-        }*/
+            cout << RED << "Error durante la decodificación: " << e.what() << RESET << endl;
+        }
     }
+    
     else if (comando == "segmentar") {
         if (tokens.size() < 5 || (tokens.size() - 2) % 3 != 0) {
             cout << RED << "Error: Uso correcto: segmentar (salida_imagen.pgm) (sx1) (sy1) (sl1) [sx2 sy2 sl2 ...]" << RESET << endl;
