@@ -6,7 +6,6 @@
 #include <fstream>
 #include "sistema.h"
 #include "ArbolCodificacion.h"
-#include "CodificadorHuffman.h"
 //#include <algorithm>
 
 using namespace std;
@@ -242,26 +241,22 @@ bool procesarComando(const vector<string>& tokens) {
             int alto = imagenActual.getAlto();
             int maxIntensidad = imagenActual.getIntensidadMaxima();
 
-            // Convert vector to map for frequencies
+            // Convierte el vector a mapa para las frecuencias
             map<int, unsigned long> frecuenciasMap = imagenActual.calcular_frecuencias();
             
             ArbolCodificacion<int> arbol;
             arbol.construirArbolCodificacion(frecuenciasMap);
             
-            // Get the root node
-            NodoCodificacion<int>* raiz = arbol.obtenerRaiz();
-            
-            // Generate codes and encode image
-            unordered_map<int, string> codigos = generarCodigos(raiz);
-            string bitsCodificados = codificarImagen(pixeles, codigos);
+            // Codifica la imagen usando el árbol
+            string bitsCodificados = arbol.codificarImagen(pixeles);
 
-            // Convert map back to vector for saving
+            // Convierte el mapa de vuelta a vector para guardarlo
             vector<unsigned long> frecuenciasVector(maxIntensidad + 1, 0);
             for (const auto& pair : frecuenciasMap) {
                 frecuenciasVector[pair.first] = pair.second;
             }
 
-            double compressionRatio = guardarArchivoHUF(tokens[1], ancho, alto, maxIntensidad, frecuenciasVector, bitsCodificados);
+            double compressionRatio = arbol.guardarArchivoHUF(tokens[1], ancho, alto, maxIntensidad, frecuenciasVector, bitsCodificados);
 
             cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
             cout << YELLOW << "La imagen en memoria ha sido codificada exitosamente y almacenada en el archivo " << tokens[1] << RESET << endl;
@@ -289,7 +284,8 @@ bool procesarComando(const vector<string>& tokens) {
     
         // Intentar decodificar
         try {
-            bool exito = decodificarArchivoHUF(tokens[1], tokens[2]);
+            ArbolCodificacion<int> arbol;
+            bool exito = arbol.decodificarArchivoHUF(tokens[1], tokens[2]);
             if (exito) {
                 cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
                 cout << YELLOW << "El archivo " << tokens[1] << " ha sido decodificado exitosamente, y la imagen correspondiente se ha almacenado en el archivo " << tokens[2] << RESET << endl;
