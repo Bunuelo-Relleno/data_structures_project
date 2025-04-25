@@ -84,6 +84,7 @@ void ArbolCodificacion<T>::construirArbolCodificacion(std::map<T, unsigned long>
     }
 
     this->raiz = colaPrioridad.top();
+
     colaPrioridad.pop();
 }
 
@@ -122,54 +123,36 @@ std::string ArbolCodificacion<T>::codificarImagen(const std::vector<std::vector<
 
 template <class T>
 double ArbolCodificacion<T>::guardarArchivoHUF(const std::string& nombreArchivo, int ancho, int alto, int maxIntensidad, 
-                                             const std::vector<unsigned long>& frecuencias, const std::string& bitsCodificados) {
+                                               const std::vector<unsigned long>& frecuencias, const std::string& bitsCodificados) {
     std::ofstream archivo(nombreArchivo, std::ios::binary);
     if (!archivo.is_open()) {
         std::cerr << "No se pudo abrir el archivo .huf para escritura.\n";
         return 0.0;
     }
 
-    // Cuenta cuántas intensidades se usan realmente
-    int numIntensidadesUsadas = 0;
-    for (int i = 0; i <= maxIntensidad; ++i) {
-        if (frecuencias[i] > 0) numIntensidadesUsadas++;
-    }
+    // Escribe el ancho y alto (2 bytes cada uno)
+    unsigned short w = static_cast<unsigned short>(ancho);
+    unsigned short h = static_cast<unsigned short>(alto);
+    archivo.write(reinterpret_cast<char*>(&w), sizeof(w));
+    archivo.write(reinterpret_cast<char*>(&h), sizeof(h));
 
-    // Calcula el tamaño original del archivo (asumiendo formato PGM)
-    long originalSize = 3 + std::to_string(ancho).length() + std::to_string(alto).length() + 
-                       std::to_string(maxIntensidad).length() + 4;
-    originalSize += ancho * alto * (std::to_string(maxIntensidad).length() + 1);
-
-    // Escribe W y H (2 bytes cada uno)
-    unsigned short w = ancho;
-    unsigned short h = alto;
-    archivo.write(reinterpret_cast<char*>(&w), sizeof(unsigned short));
-    archivo.write(reinterpret_cast<char*>(&h), sizeof(unsigned short));
-
-    // Escribe M (1 byte)
+    // Escribe la intensidad máxima (1 byte)
     unsigned char m = static_cast<unsigned char>(maxIntensidad);
-    archivo.write(reinterpret_cast<char*>(&m), sizeof(unsigned char));
+    archivo.write(reinterpret_cast<char*>(&m), sizeof(m));
 
-    // Escribe el número de intensidades usadas (1 byte)
-    unsigned char numUsed = static_cast<unsigned char>(numIntensidadesUsadas);
-    archivo.write(reinterpret_cast<char*>(&numUsed), sizeof(unsigned char));
-
-    // Escribe solo las frecuencias que se usan, junto con sus valores de intensidad
-    for (int i = 0; i <= maxIntensidad; ++i) {
-        if (frecuencias[i] > 0) {
-            unsigned char intensidad = static_cast<unsigned char>(i);
-            archivo.write(reinterpret_cast<char*>(&intensidad), sizeof(unsigned char));
-            uint32_t freq = static_cast<uint32_t>(frecuencias[i]);
-            archivo.write(reinterpret_cast<char*>(&freq), sizeof(uint32_t));
-        }
+    // Escribe las frecuencias (8 bytes por frecuencia)
+    for (unsigned long frecuencia : frecuencias) {
+        archivo.write(reinterpret_cast<char*>(&frecuencia), sizeof(frecuencia));
     }
 
-    // Escribe los bits codificados
+    // Escribe los bits codificados como bytes
     unsigned char byte = 0;
     int bitIndex = 0;
 
     for (char bit : bitsCodificados) {
-        if (bit == '1') byte |= (1 << (7 - bitIndex));
+        if (bit == '1') {
+            byte |= (1 << (7 - bitIndex));
+        }
         bitIndex++;
 
         if (bitIndex == 8) {
@@ -179,6 +162,7 @@ double ArbolCodificacion<T>::guardarArchivoHUF(const std::string& nombreArchivo,
         }
     }
 
+    // Escribe el último byte si no está completo
     if (bitIndex > 0) {
         archivo.write(reinterpret_cast<char*>(&byte), 1);
     }
@@ -187,38 +171,42 @@ double ArbolCodificacion<T>::guardarArchivoHUF(const std::string& nombreArchivo,
     long compressedSize = archivo.tellp();
     archivo.close();
 
+    // Calcula el tamaño original del archivo PGM
+    long originalSize = 3 + std::to_string(ancho).length() + std::to_string(alto).length() + 
+                        std::to_string(maxIntensidad).length() + 4 + (ancho * alto);
+
     // Retorna el ratio de compresión (original/comprimido)
     return static_cast<double>(originalSize) / compressedSize;
 }
 
 template <class T>
 bool ArbolCodificacion<T>::leerArchivoHUF(const std::string& nombreArchivoHUF,
-                                        unsigned short& ancho,
-                                        unsigned short& alto,
-                                        unsigned char& maxIntensidad,
-                                        std::map<int, unsigned long>& frecuencias,
-                                        std::string& bits) {
+                                          unsigned short& ancho,
+                                          unsigned short& alto,
+                                          unsigned char& maxIntensidad,
+                                          std::map<int, unsigned long>& frecuencias,
+                                          std::string& bits) {
     std::ifstream archivo(nombreArchivoHUF, std::ios::binary);
     if (!archivo.is_open()) {
         std::cerr << "No se pudo abrir el archivo .huf para lectura.\n";
         return false;
     }
 
+    // Lee el ancho y alto (2 bytes cada uno)
     archivo.read(reinterpret_cast<char*>(&ancho), sizeof(ancho));
     archivo.read(reinterpret_cast<char*>(&alto), sizeof(alto));
+
+    // Lee la intensidad máxima (1 byte)
     archivo.read(reinterpret_cast<char*>(&maxIntensidad), sizeof(maxIntensidad));
 
-    unsigned char intensidadesUsadas;
-    archivo.read(reinterpret_cast<char*>(&intensidadesUsadas), sizeof(intensidadesUsadas));
-
-    for (int i = 0; i < intensidadesUsadas; ++i) {
-        unsigned char intensidad;
-        uint32_t frecuencia;
-        archivo.read(reinterpret_cast<char*>(&intensidad), sizeof(intensidad));
+    // Lee las frecuencias (8 bytes por frecuencia)
+    for (int i = 0; i <= maxIntensidad; ++i) {
+        unsigned long frecuencia;
         archivo.read(reinterpret_cast<char*>(&frecuencia), sizeof(frecuencia));
-        frecuencias[(int)intensidad] = frecuencia;
+        frecuencias[i] = frecuencia;
     }
 
+    // Lee los bits codificados como bytes
     char byte;
     while (archivo.read(&byte, 1)) {
         for (int i = 7; i >= 0; --i) {
@@ -241,13 +229,13 @@ bool ArbolCodificacion<T>::decodificarArchivoHUF(const std::string& nombreArchiv
         return false;
     }
 
-    ArbolCodificacion<int> arbol;
-    arbol.construirArbolCodificacion(frecuencias);
-    NodoCodificacion<int>* raiz = arbol.obtenerRaiz();
+    if (this->raiz == nullptr) {
+        construirArbolCodificacion(frecuencias);
+    }
 
     std::vector<std::vector<int>> imagen(alto, std::vector<int>(ancho));
     int fila = 0, col = 0;
-    NodoCodificacion<int>* actual = raiz;
+    NodoCodificacion<int>* actual = this->raiz;
     size_t totalPixeles = ancho * alto;
     size_t pixelesDecodificados = 0;
 

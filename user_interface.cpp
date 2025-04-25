@@ -243,12 +243,11 @@ bool procesarComando(const vector<string>& tokens) {
 
             // Convierte el vector a mapa para las frecuencias
             map<int, unsigned long> frecuenciasMap = imagenActual.calcular_frecuencias();
-            
-            ArbolCodificacion<int> arbol;
-            arbol.construirArbolCodificacion(frecuenciasMap);
+
+            arbolCodificacion.construirArbolCodificacion(frecuenciasMap);
             
             // Codifica la imagen usando el árbol
-            string bitsCodificados = arbol.codificarImagen(pixeles);
+            string bitsCodificados = arbolCodificacion.codificarImagen(pixeles);
 
             // Convierte el mapa de vuelta a vector para guardarlo
             vector<unsigned long> frecuenciasVector(maxIntensidad + 1, 0);
@@ -256,7 +255,7 @@ bool procesarComando(const vector<string>& tokens) {
                 frecuenciasVector[pair.first] = pair.second;
             }
 
-            double compressionRatio = arbol.guardarArchivoHUF(tokens[1], ancho, alto, maxIntensidad, frecuenciasVector, bitsCodificados);
+            double compressionRatio = arbolCodificacion.guardarArchivoHUF(tokens[1], ancho, alto, maxIntensidad, frecuenciasVector, bitsCodificados);
 
             cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
             cout << YELLOW << "La imagen en memoria ha sido codificada exitosamente y almacenada en el archivo " << tokens[1] << RESET << endl;
@@ -284,8 +283,7 @@ bool procesarComando(const vector<string>& tokens) {
     
         // Intentar decodificar
         try {
-            ArbolCodificacion<int> arbol;
-            bool exito = arbol.decodificarArchivoHUF(tokens[1], tokens[2]);
+            bool exito = arbolCodificacion.decodificarArchivoHUF(tokens[1], tokens[2]);
             if (exito) {
                 cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
                 cout << YELLOW << "El archivo " << tokens[1] << " ha sido decodificado exitosamente, y la imagen correspondiente se ha almacenado en el archivo " << tokens[2] << RESET << endl;
