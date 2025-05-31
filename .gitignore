@@ -1,3 +1,4 @@
 *.plist
 user_interface.dsYM/
 user_interface
+*.exe
