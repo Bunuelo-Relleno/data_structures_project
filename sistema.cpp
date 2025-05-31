@@ -385,3 +385,12 @@ bool Sistema::proyeccion2D_z(string criterio, string nombreArchivo){
         return false;
     }
 }
+
+bool Sistema::segmentarImagen(const Imagen& imagen, const vector<Semilla>& semillas, const string& nombreArchivoSalida) {
+    if (!imagen.esValida()) {
+        cout << RED << "No hay una imagen cargada en memoria." << RESET << endl;
+        return false;
+    }
+    
+    return segmentador.segmentar(imagen, semillas, nombreArchivoSalida);
+}

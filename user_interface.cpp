@@ -69,7 +69,7 @@ void ayudaComando(const string& comando) {
         cout << "Para usar el comando escribir: decodificar_archivo (nombre_archivo.huf) (nombre_imagen.pgm), siendo nombre_archivo.huf el nombre del archivo donde se encuentra la imagen codificada, y el nombre_imagen.pgm el nombre del archivo donde se guardara la imagen una vez sea decodificada." << endl;
     }
     else if (comando == "segmentar") {
-        cout << "Para usar el comando escribir segmentar (salida_imagen.pgm) (sx1) (sy1) (sl1) (sx2) (syx2) (sl2) ..., siendo salida_imagen.pgm el nombre del archivo donde se guardara la imagen segmentada, y las diferentes 's', las semillas que representan las segmentaciones." << endl;
+        cout << "Para usar el comando escribir segmentar (salida_imagen.pgm) (sx1) (sy1) (sl1) [sx2 sy2 sl2 ...], siendo salida_imagen.pgm el nombre del archivo donde se guardara la imagen segmentada, y las diferentes 's', las semillas que representan las segmentaciones." << endl;
     }
     else {
         cout << "Comando no reconocido." << endl;
@@ -304,8 +304,34 @@ bool procesarComando(const vector<string>& tokens) {
             cout << RED << "Error: La extension del archivo es incorrecta" << RESET << endl;
             return true;
         }
-        cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
-        cout << YELLOW << "La imagen en memoria fue segmentada correctamente y almacenada en el archivo " << tokens[1] << RESET << endl;
+        
+        // Verificar que haya una imagen cargada
+        if (!imagenActual.esValida()) {
+            cout << RED << "No hay una imagen cargada en memoria." << RESET << endl;
+            return true;
+        }
+        
+        // Procesar las semillas
+        vector<Semilla> semillas;
+        for (size_t i = 2; i < tokens.size(); i += 3) {
+            try {
+                int x = stoi(tokens[i]);
+                int y = stoi(tokens[i + 1]);
+                int etiqueta = stoi(tokens[i + 2]);
+                semillas.push_back(Semilla(x, y, etiqueta));
+            } catch (const std::exception& e) {
+                cout << RED << "Error: Valores de semilla inválidos" << RESET << endl;
+                return true;
+            }
+        }
+        
+        // Intentar segmentar la imagen
+        if (sistema.segmentarImagen(imagenActual, semillas, tokens[1])) {
+            cout << GREEN << "Comando ejecutado correctamente" << RESET << endl;
+            cout << YELLOW << "La imagen en memoria fue segmentada correctamente y almacenada en el archivo " << tokens[1] << RESET << endl;
+        } else {
+            cout << RED << "La imagen en memoria no pudo ser segmentada." << RESET << endl;
+        }
     }
     else {
         cout << RED << "Error: Comando no reconocido. Use 'ayuda' para ver la lista de comandos disponibles." << RESET << endl;
